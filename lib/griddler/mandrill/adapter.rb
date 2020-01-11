@@ -29,6 +29,11 @@ module Griddler
       end
 
       def normalize_params
+        Rails.logger.warn(logger: "Griddler::Mandrill:Adapter",
+          message: {
+            message: "normalize_params",
+            events: events
+          })
         events.select do |event|
           event_passes_spf?(event)
         end.map do |event|
