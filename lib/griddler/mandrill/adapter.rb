@@ -12,7 +12,22 @@ module Griddler
       end
 
       def normalize_params
-        logger.debug(message: "entered #normalize_params", events: events)
+        events.each do |event|
+          logger.debug(logger: "Griddler::Mandrill::Adapter",
+                       message: {
+                         message: "Inbound email received",
+                         to: recipients(:to, event),
+                         cc: recipients(:cc, event),
+                         bcc: resolve_bcc(event),
+                         headers: event[:headers],
+                         from: full_email([event[:from_email], event[:from_name]]),
+                         subject: event[:subject],
+                         email: event[:email], # the email address where Mandrill received the message
+                         spf: event[:spf],
+                         spam_report: event[:spam_report]
+                      })
+        end
+
         events.select do |event|
           spf_filter.passes?(event)
         end.map do |event|
