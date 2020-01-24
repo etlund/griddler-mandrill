@@ -13,7 +13,7 @@ module Griddler
 
       def normalize_params
         events.each do |event|
-          logger.debug(logger: "Griddler::Mandrill::Adapter",
+          Rails.logger.warn(logger: "Griddler::Mandrill::Adapter",
                        message: {
                          message: "Inbound email received",
                          to: recipients(:to, event),
